@@ -16,12 +16,14 @@ bool servoDebug = 0;
  * -------------------------------------------
  * RETURNS: void
  */
-void initServo(Servo *s, uint8_t pin, uint16_t *inPtr, float clkDiv, uint16_t pwmLevel, bool dir)
+void initServo(Servo *s, uint8_t pin, uint16_t *inPtr, float clkDiv, uint16_t pwmLevel, uint8_t mode, bool dir)
 {
     s->pinNum = pin;
     s->pwm = pwmLevel;
     s->input = inPtr;
     s->dir = dir;
+    s->mode = mode;
+    s->speed = mode;
     s->limit_max = MAX16;
     s->limit_min = MIN16;
     gpio_set_function(pin, GPIO_FUNC_PWM);
@@ -59,9 +61,6 @@ void initServoMapping(Servo *s, uint16_t max, uint16_t min)
     s->max = max;
     s->min = min;
     s->slope = (MAX16 - MIN16) / (max - min);
-    s->LO = max / 1000;
-    s->MD = max / 1000;
-    s->HI = max / 100; 
 }
 
 /**
@@ -112,10 +111,10 @@ uint8_t calcAngle(Servo *s)
  */
 void incrementPWM(Servo *s, uint16_t val)
 {
-    if ((uint32_t)(s->pwm + val) > (uint32_t)s->limit_max)
+    if ((uint32_t)(s->pwm + val) >= (uint32_t)s->limit_max)
     {
         s->pwm = s->limit_max;
-        //printf("NEW PWM: %d\n", s->pwm);
+        // printf("NEW PWM: %d\n", s->pwm);
         return;
     }
     s->pwm += val;
@@ -134,10 +133,10 @@ void incrementPWM(Servo *s, uint16_t val)
  */
 void decrementPWM(Servo *s, uint16_t val)
 {
-    if ((uint32_t)(s->pwm - val) < (uint32_t)s->limit_min)
+    if ((uint32_t)(s->pwm - val) <= (uint32_t)s->limit_min)
     {
         s->pwm = s->limit_min;
-        //printf("NEW PWM: %d\n", s->pwm);
+        // printf("NEW PWM: %d\n", s->pwm);
         return;
     }
     s->pwm -= val;
@@ -230,4 +229,39 @@ void updatePWM(Servo *s)
 {
     // sets the pwm level
     pwm_set_gpio_level(s->pinNum, s->pwm);
+}
+
+/**
+ * FUNCTION: setMode
+ * Sets the mode of the Servo (OFF, LO, MD, HI) AND
+ * Sets the speed of the servo to its corresponding mode value 
+ * -------------------------------------------
+ * PARAMETERS:
+ * s    : Pointer to a servo
+ * mode : OFF, LD, MD, or HI
+ * -------------------------------------------
+ * RETURNS:
+ * Void
+ */
+void setMode(Servo *s, uint8_t mode)
+{
+    s->mode = mode;
+    s->speed = mode;
+}
+
+/**
+ * FUNCTION: setSpeed
+ * Sets the mode of the Servo (OFF, LO, MD, HI) AND
+ * Sets the speed of the servo to its corresponding mode value 
+ * -------------------------------------------
+ * PARAMETERS:
+ * s     : Pointer to a servo
+ * speed : value to increment/decrement servo pwm by
+ * -------------------------------------------
+ * RETURNS:
+ * Void
+ */
+void setSpeed(Servo *s, uint8_t speed)
+{
+    s->speed = speed;
 }

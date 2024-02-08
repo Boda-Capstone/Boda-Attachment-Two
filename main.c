@@ -11,6 +11,7 @@
 uint8_t rec = 0xFF;
 uint8_t tra = 0x64;
 uint8_t input = 0;
+uint8_t oldput = 0;
 
 // Array containint list of all initialized servos
 // NOTE: Only 8 servos can be initialized at a time
@@ -90,7 +91,8 @@ void pwm_irq_init()
 
 void spi_irq()
 {
-    spi_write_read_blocking(spi_default, (uint8_t *)&tra, (uint8_t *)&input, 1);
+    spi_write_read_blocking(spi_default, (uint8_t *)&oldput, (uint8_t *)&input, 1);
+    oldput = input;
 }
 
 void spi_irq_init()
@@ -113,8 +115,8 @@ int main()
     pwm_irq_init();
 
     // initialize SPI
-    spi_init(spi_default, 1000 * 1000);
-    spi_set_format(spi_default, 8, 1, 0, SPI_MSB_FIRST);
+    spi_init(spi_default, 2 * 1000 * 1000);
+    spi_set_format(spi_default, 8, 1, 0, true);
     spi_set_slave(spi_default, true);
 
     gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
@@ -126,55 +128,54 @@ int main()
     spi_irq_init();
 
     // // Initialize two servos for finger 1
-    initServo(&servos[0], 0, &servoPWMS[0], 4.f, 0, 0);
-    initServoMapping(&servos[0], 4095, 0);
-    setServoLimits(&servos[0], MAX16 - 1000, 16384);
+    initServo(&servos[0], 0, &servoPWMS[0], 4.f, 8193, MD, 0);
+    //initServoMapping(&servos[0], 4095, 0);
+    setServoLimits(&servos[0], MAX16 / 2, 8192);
     numServos++;
 
-    initServo(&servos[1], 1, &servoPWMS[1], 4.f, 0, 1);
-    initServoMapping(&servos[1], 4095, 0);
-    setServoLimits(&servos[1], 32768, 1000);
+    initServo(&servos[1], 1, &servoPWMS[1], 4.f, MAX16 - 8191, MD, 1);
+    //initServoMapping(&servos[1], 4095, 0);
+    setServoLimits(&servos[1], MAX16 - 8192, MAX16 / 2);
     numServos++;
 
     Finger leftFinger;
     initFinger(&leftFinger, &servos[0], &servos[1]);
 
-    initServo(&servos[2], 2, &servoPWMS[2], 4.f, 0, 1);
-    initServoMapping(&servos[2], 4095, 0);
-    setServoLimits(&servos[2], MAX16 - 1000, 16384  );
+    initServo(&servos[2], 2, &servoPWMS[2], 4.f, MAX16 - 8191, MD, 1);
+    //initServoMapping(&servos[2], 4095, 0);
+    setServoLimits(&servos[2], MAX16 - 8192, MAX16 / 2);
     numServos++;
 
-    initServo(&servos[3], 3, &servoPWMS[3], 4.f, 0, 0);
-    initServoMapping(&servos[3], 4095, 0);
-    setServoLimits(&servos[3], 32768, 1000);
+    initServo(&servos[3], 3, &servoPWMS[3], 4.f, 8193, MD, 0);
+    //initServoMapping(&servos[3], 4095, 0);
+    setServoLimits(&servos[3], MAX16 / 2, 8192);
     numServos++;
 
     Finger rightFinger;
     initFinger(&rightFinger, &servos[2], &servos[3]);
 
-    uint16_t temp = 0;
     while (1)
     {
-        if (input & 0b10000000)
+        if (input & 0b00001000)
         {
-            extendBottom(&leftFinger, SERVO_SPEED);
-            extendBottom(&rightFinger, SERVO_SPEED);
+            extendBottom(&leftFinger, HI);
+            extendBottom(&rightFinger, HI);
         }
-        if (input & 0b01000000)
+        if (input & 0b00000100)
         {
-            retractBottom(&leftFinger, SERVO_SPEED);
-            retractBottom(&rightFinger, SERVO_SPEED);
+            retractBottom(&leftFinger, HI);
+            retractBottom(&rightFinger, HI);
         }
-        if (input & 0b00100000)
+        if (input & 0b00000010)
         {
-            extendTop(&leftFinger, SERVO_SPEED);
-            extendTop(&rightFinger, SERVO_SPEED);
+            extendTop(&leftFinger, HI);
+            extendTop(&rightFinger, HI);
         }
-        if (input & 0b00010000)
+        if (input & 0b00000001)
         {
-            retractTop(&leftFinger, SERVO_SPEED);
-            retractTop(&rightFinger, SERVO_SPEED);
+            retractTop(&leftFinger, HI);
+            retractTop(&rightFinger, HI);
         }
-        sleep_us(20);
+        input = 0;
     }
 }

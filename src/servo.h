@@ -6,17 +6,12 @@
 #define SERVO_H
 
 #define MAX16 65535
-#define MIN16 0
+#define MIN16 128
 #define ANGLE_SLOPE (65535) / (180)
-#define SERVO_SPEED 1
-
-/**
- * SERVO TODO:
- *  - Make speeds ^ automatically calculated when the max and min are put in.
- *      - lo speed : 1% max
- *      - me speed : 3% max
- *      - hi speed : 5% max
- */
+#define HI 50
+#define MD 20
+#define LO 10
+#define OFF 0
 
 typedef struct
 {
@@ -37,10 +32,9 @@ typedef struct
     // Automatically calculated linear slope used in mapping function
     uint16_t slope;
 
-    // Automatically determined servo speeds TESTING
-    uint16_t LO;
-    uint16_t MD;
-    uint16_t HI;
+    // delay before calling increment and decrement;
+    uint8_t speed;
+    uint8_t mode;
     // User set min limit on serbo position
     uint16_t limit_min;
     // User set max limit on servo position
@@ -53,7 +47,7 @@ typedef struct
     bool dir;
 } Servo;
 
-void initServo(Servo *s, uint8_t pin, uint16_t *inPtr, float clkDiv, uint16_t pwmLevel, bool dir);
+void initServo(Servo *s, uint8_t pin, uint16_t *inPtr, float clkDiv, uint16_t pwmLevel, uint8_t mode, bool dir);
 void initServoMapping(Servo *s, uint16_t max, uint16_t min);
 void setServoLimits(Servo *s, uint16_t max, uint16_t min);
 uint8_t calcAngle(Servo *s);
@@ -63,5 +57,7 @@ void open(Servo *s, uint16_t val);
 void close(Servo *s, uint16_t val);
 void inputPWM(Servo *s);
 void updatePWM(Servo *s);
-
+void setMode(Servo *s, uint8_t mode);
+void setSpeed(Servo *s, uint8_t speed);
+bool limitCheck(Servo *s, uint16_t val);
 #endif
