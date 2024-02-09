@@ -1,7 +1,7 @@
 #include "Attachment.h"
 
-uint8_t *ptrInput;
-uint8_t *ptrOutput;
+uint8_t att_input;
+uint8_t att_output;
 
 /**
  * FUNCTION:
@@ -19,7 +19,7 @@ uint8_t *ptrOutput;
  * if the bit is set, execute the corresponding buttonFunction
  * -------------------------------------------
  * PARAMETERS:
- * a : Attachment to Poll 
+ * a : Attachment to Poll
  * -------------------------------------------
  * RETURNS:
  * Void
@@ -43,15 +43,14 @@ void pollButtonFunctions(Attachment *a)
  * Initializes instance of attachment struct
  * -------------------------------------------
  * PARAMETERS:
- * a          : Pointer to attachment
- * statusByte : pointer to 
+ * a : Pointer to attachment
  * -------------------------------------------
  * RETURNS:
- *
+ * Void
  */
-void initAttachment(Attachment *a, uint8_t *statusByte)
+void initAttachment(Attachment *a)
 {
-    a->buttonStatus = statusByte;
+    a->buttonStatus = &att_input;
 
     a->buttonFunctions[0] = buttonOneFunction;
     a->buttonFunctions[1] = buttonTwoFunction;
@@ -76,9 +75,20 @@ void initAttachment(Attachment *a, uint8_t *statusByte)
     spi_irq_init();
 }
 
+/**
+ * FUNCTION: spi_irq
+ * Triggers on incoming SPI transaction, reads incoming
+ * byte and sends one byte
+ * -------------------------------------------
+ * PARAMETERS:
+ *
+ * -------------------------------------------
+ * RETURNS:
+ *
+ */
 void spi_irq()
 {
-    spi_write_read_blocking(spi_default, ptrOutput, ptrInput, 1);
+    spi_write_read_blocking(spi_default, (uint8_t *)&att_output, (uint8_t *)&att_input, 1);
 }
 
 void spi_irq_init()

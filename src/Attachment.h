@@ -5,14 +5,14 @@
 #ifndef ATTACHMENT_H
 #define ATTACHMENT_H
 
-#ifndef IN_PTR
-#define IN_PTR
-extern uint8_t *ptrInput;
+#ifndef ATT_INPUT
+#define ATT_INPUT
+extern uint8_t att_input;
 #endif
 
-#ifndef OUT_PTR
-#define OUT_PTR
-extern uint8_t *ptrOutput;
+#ifndef ATT_OUTPUT
+#define ATT_OUTPUT
+extern uint8_t att_output;
 #endif
 
 typedef void (*buttonFunction)(void);
@@ -23,7 +23,7 @@ typedef struct
     buttonFunction buttonFunctions[8];
 } Attachment;
 
-void initAttachment(Attachment *a, uint8_t *statusByte);
+void initAttachment(Attachment *a);
 void pollButtonFunctions(Attachment *a);
 void spi_irq_init();
 void spi_irq();

@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
-#include "hardware/gpio.h"
 #include "hardware/spi.h"
 #include "src/Attachment.h"
 
@@ -8,10 +7,10 @@ Attachment a;
 
 int main()
 {
+
     stdio_init_all();
 
-    initAttachment(&a, ptrInput);
-    spi_irq_init();
+    initAttachment(&a);
 
     //User Code Init Begin
 
