@@ -4,8 +4,6 @@
 #include "hardware/spi.h"
 #include "src/Attachment.h"
 
-uint8_t TOREPLACE = 0;
-
 Attachment a;
 
 int main()
