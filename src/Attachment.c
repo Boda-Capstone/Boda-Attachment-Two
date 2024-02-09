@@ -81,16 +81,27 @@ void initAttachment(Attachment *a)
  * byte and sends one byte
  * -------------------------------------------
  * PARAMETERS:
- *
+ * N/A
  * -------------------------------------------
  * RETURNS:
- *
+ * Void
  */
 void spi_irq()
 {
     spi_write_read_blocking(spi_default, (uint8_t *)&att_output, (uint8_t *)&att_input, 1);
 }
 
+/**
+ * FUNCTION: spi_irq_init
+ * Initialization for SPI IRQ
+ * !!To be called after an attachment has been initialized
+ * -------------------------------------------
+ * PARAMETERS:
+ * N/A
+ * -------------------------------------------
+ * RETURNS:
+ * Void
+ */
 void spi_irq_init()
 {
     spi0_hw->imsc = 1 << 2;
