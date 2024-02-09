@@ -79,6 +79,7 @@ void initAttachment(Attachment *a)
  * FUNCTION: spi_irq
  * Triggers on incoming SPI transaction, reads incoming
  * byte and sends one byte
+ * !!NOT meant to be called by user, but can be edited by user if necessary
  * -------------------------------------------
  * PARAMETERS:
  * N/A
