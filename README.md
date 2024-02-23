@@ -64,6 +64,8 @@ Each button has its own function:
 2. In the function add your code before the return statement to give the button functionality.
 
 ## Attachment Commands:
+| Command | Description |
+| ------- | ----------- |
 | 0x01 | Get Button to Trigger buttonOneFunction | 
 | 0x02 | Get Button to Trigger buttonTwoFunction | 
 | 0x03 | Get Button to Trigger buttonThreeFunction | 
