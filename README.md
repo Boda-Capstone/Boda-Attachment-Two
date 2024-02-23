@@ -64,20 +64,12 @@ Each button has its own function:
 2. In the function add your code before the return statement to give the button functionality.
 
 ## Attachment Commands:
-0x01: Get Button to Trigger buttonOneFunction
-
-0x02: Get Button to Trigger buttonTwoFunction
-
-0x03: Get Button to Trigger buttonThreeFunction
-
-0x04: Get Button to Trigger buttonFourFunction
-
-0x05: Get Button to Trigger buttonFiveFunction
-
-0x06: Get Button to Trigger buttonSixFunction
-
-0x07: Get Button to Trigger buttonSevenFunction
-
-0x08: Get Button to Trigger buttonEightFunction
-
-0x64: Read WHO_AM_I register
+| 0x01 | Get Button to Trigger buttonOneFunction | 
+| 0x02 | Get Button to Trigger buttonTwoFunction | 
+| 0x03 | Get Button to Trigger buttonThreeFunction | 
+| 0x04 | Get Button to Trigger buttonFourFunction | 
+| 0x05 | Get Button to Trigger buttonFiveFunction | 
+| 0x06 | Get Button to Trigger buttonSixFunction | 
+| 0x07 | Get Button to Trigger buttonSevenFunction | 
+| 0x08 | Get Button to Trigger buttonEightFunction | 
+| 0x64 | Read WHO_AM_I register | 
