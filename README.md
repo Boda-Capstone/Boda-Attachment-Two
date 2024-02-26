@@ -18,9 +18,11 @@ VSCode and A valid instance of WSL/WSL2; development used WSL2: Ubuntu
 
    https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf?_gl=1*r2v8m9*_ga*MTcxOTc2MzgwNi4xNzA3MjYzODA5*_ga_22FD70LWDS*MTcwNzYwOTU4Mi4xLjAuMTcwNzYwOTU4Mi4wLjAuMA..
 
-2. Clone Git Repo to a local folder.
+2. Fork this repository OR skip to step 2
 
-3. In the top level project directory, edit the `CMakeLists.txt` locate line 3:
+3. Clone Git Repo to a local folder.
+
+4. In the top level project directory, edit the `CMakeLists.txt` locate line 3:
 ```
 set(PICO_SDK_PATH "/{FILE_PATH}/pico-sdk")
 ```
