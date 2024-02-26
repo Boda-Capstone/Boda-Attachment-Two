@@ -71,12 +71,8 @@ Each button has its own function:
 ## Attachment Commands:
 | Command | Description |
 | ------- | ----------- |
-| 0x01 | Get Button to Trigger buttonOneFunction | 
-| 0x02 | Get Button to Trigger buttonTwoFunction | 
-| 0x03 | Get Button to Trigger buttonThreeFunction | 
-| 0x04 | Get Button to Trigger buttonFourFunction | 
-| 0x05 | Get Button to Trigger buttonFiveFunction | 
-| 0x06 | Get Button to Trigger buttonSixFunction | 
-| 0x07 | Get Button to Trigger buttonSevenFunction | 
-| 0x08 | Get Button to Trigger buttonEightFunction | 
+| 0x01 | Get Buttons to Trigger buttonOneFunction and buttonTwoFunction | 
+| 0x02 | Get Buttons to Trigger buttonThreeFunction and buttonFourFunction | 
+| 0x03 | Get Buttons to Trigger buttonFiveFunction and buttonSixFunction | 
+| 0x04 | Get Buttons to Trigger buttonSevenFunction and buttonEightFunction | 
 | 0x64 | Read WHO_AM_I register | 
