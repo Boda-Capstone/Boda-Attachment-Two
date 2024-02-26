@@ -56,6 +56,9 @@ make
 The attachment library, `Attachment.h & Attachment.c`, contain the default attachment settings to communicate with the Boda arm. The attachment struct instance at `line 6: Attachment a;` is already created and initialized in `line 13: initAttachment(&a);`.
 It uses the Pi Pico's `spi_default` to communicate with the Boda arm and automatically sets an IRQ to receive inputs and commands. Commands are decoded and automatically sent back to the arm without user intervention and inputs are stored in a status byte in the Attachment struct. Inputs are checked by calling `pollButtonFunctions(Attachment* a);` which is called in the program's infinite loop. This function will check if a button's bit has been set in the Attachment's status byte and then call its respective button function and clear the bit. These functions are seen below the main loop and are titled `buttonOneFunction() -> buttonEightFunction()` and are where each button's functionality goes.
 
+### Updating the Version:
+The version of your attachment library is located in `src/Attachment.h`.
+
 ### Editing Attachment Identifiers and Settings:
 In `Attachment.c` at the top of the file there are several user changeable settings and identifiers to set when creating an attachment including: what button activates each 'button{num}Function', WHO_AM_I identifier, locations of sensor Data.
 Our current implementation relies on our PlayStation 2 Controller interface, thus the options for buttons are based on the PS2 Controllers'.
