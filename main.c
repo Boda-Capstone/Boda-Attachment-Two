@@ -21,8 +21,6 @@ int main()
     {
         pollButtonFunctions(&a);
         //User Code While Loop Begin
-
-
         //User Code While Loop End
     }
 }
@@ -32,24 +30,28 @@ int main()
 // Button One Function
 void buttonOneFunction()
 {
+    printf("ONE\n");
     return;
 }
 
 // Button Two Function
 void buttonTwoFunction()
 {
+    printf("TWO\n");
     return;
 }
 
 // Button Three Function
 void buttonThreeFunction()
 {
+    printf("THREE\n");
     return;
 }
 
 // Button Four Function
 void buttonFourFunction()
 {
+    printf("FOUR\n");
     return;
 }
 

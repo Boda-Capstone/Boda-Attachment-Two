@@ -1,11 +1,13 @@
 #include "Attachment.h"
 
-uint8_t att_input;
-uint8_t att_output;
+uint16_t att_input;
+uint16_t att_output = 0x01;
+uint16_t WHO_AM_I = 'DA';
+uint8_t buttons[8] = {ATT_X, ATT_CIRCLE, ATT_TRIANGLE, ATT_SQUARE, ATT_R1, ATT_R2, ATT_L1, ATT_L2};
 
 /**
  * FUNCTION:
- * 
+ *
  * -------------------------------------------
  * PARAMETERS:
  *
@@ -13,31 +15,6 @@ uint8_t att_output;
  * RETURNS:
  *
  */
-
-/**
- * FUNCTION: pollButtonFunctions
- * When called, polls each bit in attachment's buttonStatus,
- * if the bit is set, execute the corresponding buttonFunction
- * -------------------------------------------
- * PARAMETERS:
- * a : Attachment to Poll
- * -------------------------------------------
- * RETURNS:
- * Void
- */
-void pollButtonFunctions(Attachment *a)
-{
-    for (int i = 0; i < 8; i++)
-    {
-        if (*(a->buttonStatus) & (1 << i))
-        {
-            (a->buttonFunctions[i])();
-            uint8_t temp = 0b11111111;
-            temp ^= (1 << i);
-            *(a->buttonStatus) &= temp;
-        }
-    }
-}
 
 /**
  * FUNCTION: initAttachment
@@ -63,8 +40,8 @@ void initAttachment(Attachment *a)
     a->buttonFunctions[7] = buttonEightFunction;
 
     // initialize SPI
-    spi_init(spi_default, 2 * 1000 * 1000);
-    spi_set_format(spi_default, 8, 1, 0, true);
+    spi_init(spi_default, 1000 * 1000);
+    spi_set_format(spi_default, 16, 1, 0, true);
     spi_set_slave(spi_default, true);
 
     gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
@@ -74,6 +51,34 @@ void initAttachment(Attachment *a)
 
     // initialize spi irq for control data
     spi_irq_init();
+}
+
+/**
+ * FUNCTION: pollButtonFunctions
+ * When called, polls each bit in attachment's buttonStatus,
+ * if the bit is set, execute the corresponding buttonFunction
+ * -------------------------------------------
+ * PARAMETERS:
+ * a : Attachment to Poll
+ * -------------------------------------------
+ * RETURNS:
+ * Void
+ */
+void pollButtonFunctions(Attachment *a)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        if (*(a->buttonStatus) & (1 << i))
+        {
+            // if the buttons isnt meant to be held:
+
+            (a->buttonFunctions[i])();
+
+            uint16_t temp = 0b1111111111111111;
+            temp ^= (1 << i);
+            *(a->buttonStatus) &= temp;
+        }
+    }
 }
 
 /**
@@ -90,7 +95,47 @@ void initAttachment(Attachment *a)
  */
 void spi_irq()
 {
-    spi_write_read_blocking(spi_default, (uint8_t *)&att_output, (uint8_t *)&att_input, 1);
+    spi_write16_read16_blocking(spi_default, (uint16_t *)&att_output, (uint16_t *)&att_input, 1);
+    att_output = 0x01;
+    if ((uint8_t)((att_input >> 8) & 0xFF) != 0)
+    {
+        switch ((uint8_t)((att_input >> 8) & 0xFF))
+        {
+        case 0x01:
+            att_output = (uint16_t)buttons[0];
+            att_output |= ((uint16_t)buttons[1] << 8);
+            break;
+        case 0x02:
+            att_output = (uint16_t)buttons[2];
+            att_output |= ((uint16_t)buttons[3] << 8);
+            break;
+        case 0x03:
+            att_output = (uint16_t)buttons[4];
+            att_output |= ((uint16_t)buttons[5] << 8);
+            break;
+        case 0x04:
+            att_output = (uint16_t)buttons[6];
+            att_output |= ((uint16_t)buttons[7] << 8);
+            break;
+        case 0x05:
+            break;
+        case 0x0C:
+            att_output = 0x01;
+            break;
+        case 0x0D:
+            break;
+        case 0x0E:
+            att_output = 0xAA;
+        case 0x64:
+            att_output = WHO_AM_I;
+            break;
+        default:
+            break;
+        }
+        uint16_t temp = 0b1111111111111111;
+        temp ^= 0xF0;
+        att_input &= temp;
+    }
 }
 
 /**

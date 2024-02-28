@@ -5,26 +5,45 @@
 #ifndef ATTACHMENT_H
 #define ATTACHMENT_H
 
-#ifndef ATT_INPUT
-#define ATT_INPUT
-extern uint8_t att_input;
-#endif
+extern uint16_t att_input;
 
-#ifndef ATT_OUTPUT
-#define ATT_OUTPUT
-extern uint8_t att_output;
-#endif
+extern uint16_t att_output;
+
+extern uint16_t WHO_AM_I;
+
+extern uint8_t buttons[8];
+
+#define ATT_X 0xBF
+#define ATT_CIRCLE 0xDF
+#define ATT_TRIANGLE 0xEF
+#define ATT_SQUARE 0x7F
+
+#define ATT_R1 0xF7
+#define ATT_R2 0xFD
+#define ATT_L1 0xFB
+#define ATT_L2 0xFE
+
+#define ATT_DRIGHT 0xDF
+#define ATT_DUP 0xEF
+#define ATT_DDOWN 0xBF
+#define ATT_DLEFT 0x7F
+
+#define ATT_START 0xF7
+#define ATT_SELECT 0xFE
+#define ATT_L3 0xFD
+#define ATT_R3 0xFB
 
 typedef void (*buttonFunction)(void);
 
 typedef struct
 {
-    uint8_t *buttonStatus;
+    uint16_t *buttonStatus;
     buttonFunction buttonFunctions[8];
 } Attachment;
 
 void initAttachment(Attachment *a);
 void pollButtonFunctions(Attachment *a);
+void buttonTimeout(Attachment *a);
 void spi_irq_init();
 void spi_irq();
 
