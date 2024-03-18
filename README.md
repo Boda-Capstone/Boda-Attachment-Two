@@ -75,4 +75,33 @@ Each button has its own function:
 | 0x02 | Get Buttons to Trigger buttonThreeFunction and buttonFourFunction | 
 | 0x03 | Get Buttons to Trigger buttonFiveFunction and buttonSixFunction | 
 | 0x04 | Get Buttons to Trigger buttonSevenFunction and buttonEightFunction | 
+| 0x0C | Return 0x01 (used for connection testing) |
+| 0x0E | Emergency Return Identifier 0xAA (Disconnection Detection) |
+| 0x10 | Set Mapped Index 1 |
+| 0x11 | Set Mapped index 2 |
+| 0x12 | Set Mapped index 3 |
+| 0x13 | Set Mapped index 4 |
+| 0x14 | Set Mapped index 5 |
+| 0x15 | Set Mapped index 6 |
+| 0x16 | Set Mapped index 7 |
+| 0x17 | Set Mapped index 8 |
+| 0x18 | Set Data at Mapped Index 1 |
+| 0x19 | Set Data at Mapped Index 2 |
+| 0x1A | Set Data at Mapped Index 3 |
+| 0x1B | Set Data at Mapped Index 4 |
+| 0x1C | Set Data at Mapped Index 5 |
+| 0x1D | Set Data at Mapped Index 6 |
+| 0x1E | Set Data at Mapped Index 7 |
+| 0x1F | Set Data at Mapped Index 8 |
+| 0x20 | Set Data at Global Index and Increment |
+| 0x21 | Set Data at Global Index |
+| 0x22 | Set Data at Global Index and Decrement |
+| 0x23 | Set Global Index|
+| 0x24 | Set Global Index Range Max (Default 127) |
+| 0x25 | Set Global Index Range Min (Default 8) |
+| 0x26 | Send Data at Global Index|
+| 0x27 | Send Data at Received Index (Within Range) |
+| 0x28 | Send Data and Increment Global Index |
+| 0x29 | Send Data and Decrement Global Index |
 | 0x64 | Read WHO_AM_I register | 
+| >= 0x80 | Send Data at Index (cmd - 128) |
