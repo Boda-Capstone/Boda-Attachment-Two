@@ -68,6 +68,17 @@ Each button has its own function:
 1. Figure out which button's function you want to edit. If you haven't set them yourself, check in `Attachment.c` for the `buttons[8]` array, get the index of the button you want to add functionality to, add 1, and go to its button function in `main.c`.
 2. In the function add your code before the return statement to give the button functionality.
 
+### Data Structures, Data Transmission, and Data Storage
+Attachments have 128 bytes of general purpose data which can be accessed by the limb through commands. This data can be retreived one of two ways:
+1. Accessing by Index:
+And command that has a value greater than 0x80 (127) will return the data at the index:
+`data[(cmd - 128)]`
+For Example: 0x80 will return the data at index 0, 0x80 will return the data at index 1, ..., up until the max of 0xFF which returns the data at index 127
+
+3. Accessing by Global Indexing:
+
+### Mapped Indices
+
 ## Attachment Commands:
 | Command | Description |
 | ------- | ----------- |
