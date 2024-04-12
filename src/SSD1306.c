@@ -124,15 +124,7 @@ void writeDisplay(SSD1306 *s)
     i2c_write_blocking(s->i2c, SSD1306_SLAVE_ADDRESS, tempBuffer, 1025, 0);
 }
 
-void insertSmallChar(SSD1306 *s, uint8_t *charArray, uint8_t x, uint8_t y)
-{
-}
-
-void insertLargeChar(SSD1306 *s, uint8_t *charArray)
-{
-}
-
-void getSmallChar(char c, uint8_t *charArray)
+void getSmallChar(char c, uint8_t charArray[5])
 {
     switch (c)
     {
@@ -258,7 +250,7 @@ void getSmallChar(char c, uint8_t *charArray)
         break;
     case 'p':
     case 'P':
-        charArray[0] = 0x3E7F;
+        charArray[0] = 0x7F;
         charArray[1] = 0x11;
         charArray[2] = 0x11;
         charArray[3] = 0x11;
@@ -451,5 +443,121 @@ void getLargeChar(char c, uint8_t charArray[10][2])
                 }
             }
         }
+    }
+}
+
+void writeSmallLine(SSD1306 *s, char *str, uint8_t length, uint8_t justification, uint8_t line)
+{
+    // Max length to print on a line is 21 small charcters
+    if (length > 21)
+    {
+        return;
+    }
+
+    if (line > 8)
+    {
+        return;
+    }
+
+    uint8_t bufferIndex = 0;
+    uint8_t charBuffer[5] = {0, 0, 0, 0, 0};
+
+    switch (justification)
+    {
+    // Left Justify
+    case 0:
+        bufferIndex = 1;
+        break;
+    // Right Justify
+    case 1:
+        bufferIndex = 129 - (6 * length);
+        break;
+    // Other Center Justification
+    default:
+        bufferIndex = 64 - (3 * length);
+        break;
+    }
+
+    // for each character in the string
+    for (int i = 0; i < length; i++)
+    {
+        // get the character
+        getSmallChar(str[i], charBuffer);
+
+        // copy the character to the display buffer
+        for (int j = 0; j < 5; j++)
+        {
+            s->dataBuffer[bufferIndex++][line] = charBuffer[j];
+        }
+
+        // add a space between characters
+        s->dataBuffer[bufferIndex++][line] = 0x00;
+    }
+}
+
+void writeLargeLine(SSD1306 *s, char *str, uint8_t length, uint8_t justification, uint8_t line)
+{
+    // Max length to print on a line is 21 small charcters
+    if (length > 10)
+    {
+        return;
+    }
+
+    if (line > 4)
+    {
+        return;
+    }
+
+    uint8_t bufferIndex = 0;
+    uint8_t charBuffer[10][2];
+
+    switch (justification)
+    {
+    // Left Justify
+    case 0:
+        bufferIndex = 1;
+        break;
+    // Right Justify
+    case 1:
+        bufferIndex = 129 - (12 * length);
+        break;
+    // Other Center Justification
+    default:
+        bufferIndex = 64 - (6 * length);
+        break;
+    }
+
+    // for each character in the string
+    for (int i = 0; i < length; i++)
+    {
+        // ensure buffer is 0's
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                charBuffer[i][j] = 0;
+            }
+        }
+
+        // get the character
+        getLargeChar(str[i], charBuffer);
+
+        // Add a space before the character
+        s->dataBuffer[bufferIndex][2 * line] = 0x00;
+        s->dataBuffer[bufferIndex][(2 * line) + 1] = 0x00;
+        bufferIndex++;
+
+        // copy the character to the display buffer
+        for (int j = 0; j < 10; j++)
+        {
+            s->dataBuffer[bufferIndex][2 * line] = charBuffer[j][0];
+            s->dataBuffer[bufferIndex][(2 * line) + 1] = charBuffer[j][1];
+            bufferIndex++;
+        }
+
+        // add a space after character
+        s->dataBuffer[bufferIndex][2 * line] = 0x00;
+        s->dataBuffer[bufferIndex][(2 * line) + 1] = 0x00;
+        bufferIndex++;
     }
 }

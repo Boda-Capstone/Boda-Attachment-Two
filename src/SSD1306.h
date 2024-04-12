@@ -26,11 +26,8 @@ void initSSD1306(SSD1306 *s, i2c_inst_t *i2c);
 void setDataBuffer(SSD1306 *s, uint8_t arr[128][8]);
 void writeCommand(SSD1306 *s, uint8_t cmd, uint8_t *data, uint8_t l);
 void writeDisplay(SSD1306 *s);
-void insertSmallChar(SSD1306 *s, uint8_t* charArray, uint8_t x, uint8_t y);
-void insertLargeChar(SSD1306 *s, uint8_t* charArray);
-void getSmallChar(char c, uint8_t* charArray);
+void getSmallChar(char c, uint8_t charArray[5]);
 void getLargeChar(char c, uint8_t charArray[10][2]);
-void writeLineCenter();
-void writeLineLeft();
-void writeLineRight();
+void writeSmallLine(SSD1306 *s, char *str, uint8_t length, uint8_t justification, uint8_t line);
+void writeLargeLine(SSD1306 *s, char *str, uint8_t length, uint8_t justification, uint8_t line);
 #endif
