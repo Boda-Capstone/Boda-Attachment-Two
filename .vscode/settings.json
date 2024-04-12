@@ -4,7 +4,10 @@
     "files.associations": {
         "dma.h": "c",
         "stdlib.h": "c",
-        "adc.h": "c"
+        "adc.h": "c",
+        "attachment.h": "c",
+        "stdio.h": "c",
+        "ssd1306.h": "c"
     },
     "git.openRepositoryInParentFolders": "never"
 }

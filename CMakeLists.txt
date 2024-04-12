@@ -18,7 +18,9 @@ add_executable(main
 target_link_libraries(main
     pico_stdlib 
     hardware_spi
+    hardware_i2c
     Attachment
+    SSD1306
 )
 
 pico_enable_stdio_usb(main 1)
